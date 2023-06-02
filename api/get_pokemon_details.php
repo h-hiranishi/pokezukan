@@ -7,7 +7,7 @@ function get_pokemon_details($id) {
 
     $pokemon = [];
     $pokemon["name"] = $data["name"];
-    $pokemon["picture"] = $data["sprites"]["front_default"];
+    $pokemon["img_url"] = $data["sprites"]["front_default"];
     $pokemon["height"] = $data["height"];
     $pokemon["weight"] = $data["weight"];
     $types = [];
