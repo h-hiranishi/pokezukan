@@ -4,11 +4,10 @@ $file_path = __DIR__ . "/../tmpl/";
 $api_path = __DIR__ . "/../../api/";
 require_once "{$api_path}get_pokemon_lists.php";
 
-    $limit = 10;
-    $offset = 0;
+$limit = 10;
+$offset = 0;
 
-// プログラムの開始位置
-    view_main();
+view_main();
 
 function view_main(){
     global $file_path;
@@ -19,16 +18,15 @@ function view_main(){
 
     $cards = view_cards();
     $tmpl = str_replace("!cards!", $cards, $tmpl);
-
     echo $tmpl;
 }
 
 function view_cards() {
-
     global $limit;
     global $offset;
 
     global $file_path;
+
     $file_name = "{$file_path}card.html";
     $file_handler = fopen($file_name, "r");
     $tmpl = fread($file_handler, filesize($file_name));
@@ -46,7 +44,9 @@ function view_cards() {
         }
         $cards .= $card;
     }
+
     echo $cards;
 
     return $cards;
 }
+

@@ -1,2 +1,2 @@
 <?php
-    header('Location: view/php/top.php');
+    header('Location: controller/handler.php');
