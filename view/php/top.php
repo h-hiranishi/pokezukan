@@ -4,7 +4,7 @@ $file_path = __DIR__ . "/../tmpl/";
 $api_path = __DIR__ . "/../../model/";
 require_once "{$api_path}get_pokemon_lists.php";
 
-$limit = 10;
+$limit = 4;
 $offset = 0;
 
 view_main();
@@ -37,10 +37,15 @@ function view_cards() {
     foreach ( $pokemon_lists as $pokemon ) {
         $card = $tmpl;
         foreach ( $pokemon as $key => $val ) {
-            if ( $key == "types" ) {
+            if ( $key != "types" ) {
+                $card = str_replace("!{$key}!", $val, $card);
                 continue;
             }
-            $card = str_replace("!{$key}!", $val, $card);
+            $types = "";
+            foreach ( $val as $type ) {
+                $types .= "<div>$type</div>";
+            }
+            $card = str_replace("!types!", $types, $card);
         }
         $cards .= $card;
     }
