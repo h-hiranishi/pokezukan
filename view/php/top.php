@@ -50,8 +50,6 @@ function view_cards() {
         $cards .= $card;
     }
 
-    echo $cards;
-
     return $cards;
 }
 
