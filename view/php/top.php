@@ -1,7 +1,7 @@
 <?php
 
 $file_path = __DIR__ . "/../tmpl/";
-$api_path = __DIR__ . "/../../api/";
+$api_path = __DIR__ . "/../../model/";
 require_once "{$api_path}get_pokemon_lists.php";
 
 $limit = 10;
