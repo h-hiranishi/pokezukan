@@ -11,8 +11,8 @@ function get_pokemon_details($id) {
     $pokemon["height"] = $data["height"];
     $pokemon["weight"] = $data["weight"];
     $types = [];
-    foreach ( $data["types"] as $types ) {
-        array_push($types, $types["type"]["name"]);
+    foreach ( $data["types"] as $type ) {
+        array_push($types, $type["type"]["name"]);
     }
     $pokemon["types"] = $types;
 
