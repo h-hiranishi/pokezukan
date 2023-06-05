@@ -67,12 +67,12 @@ function read_template_file($file_name) {
 function get_limit_and_offset() {
     $param = [];
     if ( isset($_GET["limit"]) ) {
-        $param["limit"] = $_GET["limit"];
+        $param["limit"] = htmlentities($_GET["limit"], ENT_QUOTES, "utf-8");
     } else {
-        $param["limit"] = 50;
+        $param["limit"] = 20;
     }
     if ( isset($_GET["offset"]) ) {
-        $param["offset"] = $_GET["offset"];
+        $param["offset"] = htmlentities($_GET["offset"], ENT_QUOTES, "utf-8");
     } else {
         $param["offset"] = 0;
     }
