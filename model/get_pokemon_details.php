@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . "/get_contents.php";
+require_once __DIR__ . "/get_img.php";
 
 function get_pokemon_details($id) {
     $url = "https://pokeapi.co/api/v2/pokemon/{$id}/";
@@ -8,7 +9,8 @@ function get_pokemon_details($id) {
 
     $pokemon = [];
     $pokemon["name"] = $data["name"];
-    $pokemon["img_url"] = $data["sprites"]["front_default"];
+    // $pokemon["img_url"] = $data["sprites"]["front_default"];
+    $pokemon["img_name"] = get_img($data["sprites"]["front_default"]);
     $pokemon["height"] = $data["height"];
     $pokemon["weight"] = $data["weight"];
     $types = [];

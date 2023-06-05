@@ -4,24 +4,24 @@ $file_path = __DIR__ . "/../tmpl/";
 $api_path = __DIR__ . "/../../model/";
 require_once "{$api_path}get_pokemon_lists.php";
 
-// limit, offsetはhandlerから受け取るかgetで受け取るか、、、、
-$limit = 20;
-$offset = 0;
 $delimiter = 4;
+$max = 1000;
 
 view_main();
 
 function view_main(){
+    global $delimiter;
+    global $max;
+    $param = get_limit_and_offset();
     $tmpl = read_template_file("template.html");
-    $cards = view_cards();
+    $cards = view_cards($param["limit"], $param["offset"], $delimiter);
     $tmpl = str_replace("!cards!", $cards, $tmpl);
+    $pages = paging($param["limit"], $param["offset"], $max);
+    $tmpl = str_replace("!paging!", $pages, $tmpl);
     echo $tmpl;
 }
-function view_cards() {
-    global $limit;
-    global $offset;
-    global $delimiter;
 
+function view_cards($limit, $offset, $delimiter) {
     $card_tmpl = read_template_file("card.html");
     $row_tmpl = read_template_file("row_cards.html");
 
@@ -46,15 +46,18 @@ function view_cards() {
 
 function make_card($pokemon, $card_tmpl) {
     foreach ( $pokemon as $key => $val ) {
-        if ( $key != "types" ) {
-            $card_tmpl = str_replace("!{$key}!", $val, $card_tmpl);
+        if ( $key == "types" ) {
+            $types = "";
+            foreach ( $val as $type ) {
+                $types .= "<div>$type</div>";
+            }
+            $card_tmpl = str_replace("!types!", $types, $card_tmpl);
             continue;
         }
-        $types = "";
-        foreach ( $val as $type ) {
-            $types .= "<div>$type</div>";
+        if ( $key == "img_name" ) {
+            $card_tmpl = str_replace("!img_url!", "/php/teck_base_camp/lp/pokezukan/model/cache_img/{$val}", $card_tmpl);
         }
-        $card_tmpl = str_replace("!types!", $types, $card_tmpl);
+        $card_tmpl = str_replace("!{$key}!", $val, $card_tmpl);
     }
     return $card_tmpl;
 }
@@ -68,3 +71,62 @@ function read_template_file($file_name) {
     return $tmpl;
 }
 
+function get_limit_and_offset() {
+    $param = [];
+    if ( isset($_GET["limit"]) ) {
+        $param["limit"] = htmlentities($_GET["limit"], ENT_QUOTES, "utf-8");
+    } else {
+        $param["limit"] = 10;
+    }
+    if ( isset($_GET["offset"]) ) {
+        $param["offset"] = htmlentities($_GET["offset"], ENT_QUOTES, "utf-8");
+    } else {
+        $param["offset"] = 0;
+    }
+    return $param;
+}
+
+function paging($limit, $offset, $max) {
+    $max_page = ceil($max / $limit);
+    $view_range = define_range($limit, $offset, $max_page);
+    $paging = "";
+    if ( 0 < $view_range["start"] ) {
+        $paging = "<span>...</span>";
+    }
+    for ( $i = $view_range["start"]; $i < $view_range["end"]; $i++ ) {
+        if ( $i == $offset ) {
+            $paging .= "<span>{$i}</span>";
+        } else {
+            $paging .= "<a href='top.php?offset={$i}'>{$i}</a>";
+        }
+    }
+    if ( $view_range["end"] < $max_page ) {
+        $paging .= "<span>...</span>";
+    }
+    return $paging;
+}
+
+function define_range($limit, $offset, $max_page) {
+    $data = [];
+    $data["start"] = 0;
+    $data["end"] = $max_page;
+
+    if ( $max_page < 11 ) {
+        return $data;
+    }
+
+    if ( $offset < 5 ) {
+        $data["end"] = 11;
+        return $data;
+    }
+
+    if ( $offset + 5 < $max_page ) {
+        $data["start"] = $offset - 5;
+        $data["end"] = $data["start"] + 11;
+        return $data;
+    }
+
+    $data["end"] = $max_page;
+    $data["start"] = $data["end"] - 11;
+    return $data;
+}
