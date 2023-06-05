@@ -46,15 +46,18 @@ function view_cards($limit, $offset, $delimiter) {
 
 function make_card($pokemon, $card_tmpl) {
     foreach ( $pokemon as $key => $val ) {
-        if ( $key != "types" ) {
-            $card_tmpl = str_replace("!{$key}!", $val, $card_tmpl);
+        if ( $key == "types" ) {
+            $types = "";
+            foreach ( $val as $type ) {
+                $types .= "<div>$type</div>";
+            }
+            $card_tmpl = str_replace("!types!", $types, $card_tmpl);
             continue;
         }
-        $types = "";
-        foreach ( $val as $type ) {
-            $types .= "<div>$type</div>";
+        if ( $key == "img_name" ) {
+            $card_tmpl = str_replace("!img_url!", "/php/teck_base_camp/lp/pokezukan/model/cache_img/{$val}", $card_tmpl);
         }
-        $card_tmpl = str_replace("!types!", $types, $card_tmpl);
+        $card_tmpl = str_replace("!{$key}!", $val, $card_tmpl);
     }
     return $card_tmpl;
 }
@@ -84,8 +87,12 @@ function get_limit_and_offset() {
 }
 
 function paging($limit, $offset, $max) {
-    $view_range = define_range($limit, $offset, $max);
+    $max_page = ceil($max / $limit);
+    $view_range = define_range($limit, $offset, $max_page);
     $paging = "";
+    if ( 0 < $view_range["start"] ) {
+        $paging = "<span>...</span>";
+    }
     for ( $i = $view_range["start"]; $i < $view_range["end"]; $i++ ) {
         if ( $i == $offset ) {
             $paging .= "<span>{$i}</span>";
@@ -93,11 +100,13 @@ function paging($limit, $offset, $max) {
             $paging .= "<a href='top.php?offset={$i}'>{$i}</a>";
         }
     }
+    if ( $view_range["end"] < $max_page ) {
+        $paging .= "<span>...</span>";
+    }
     return $paging;
 }
 
-function define_range($limit, $offset, $max) {
-    $max_page = ceil($max / $limit);
+function define_range($limit, $offset, $max_page) {
     $data = [];
     $data["start"] = 0;
     $data["end"] = $max_page;
