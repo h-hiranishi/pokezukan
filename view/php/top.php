@@ -4,6 +4,7 @@ $file_path = __DIR__ . "/../tmpl/";
 $api_path = __DIR__ . "/../../model/";
 require_once "{$api_path}get_pokemon_lists.php";
 
+// limit, offsetはhandlerから受け取るかgetで受け取るか、、、、
 $limit = 20;
 $offset = 0;
 $delimiter = 4;
