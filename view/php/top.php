@@ -5,15 +5,19 @@ $api_path = __DIR__ . "/../../model/";
 require_once "{$api_path}get_pokemon_lists.php";
 
 $delimiter = 4;
+$max = 1000;
 
 view_main();
 
 function view_main(){
     global $delimiter;
+    global $max;
     $param = get_limit_and_offset();
     $tmpl = read_template_file("template.html");
     $cards = view_cards($param["limit"], $param["offset"], $delimiter);
     $tmpl = str_replace("!cards!", $cards, $tmpl);
+    $pages = paging($param["limit"], $param["offset"], $max);
+    $tmpl = str_replace("!paging!", $pages, $tmpl);
     echo $tmpl;
 }
 
@@ -69,7 +73,7 @@ function get_limit_and_offset() {
     if ( isset($_GET["limit"]) ) {
         $param["limit"] = htmlentities($_GET["limit"], ENT_QUOTES, "utf-8");
     } else {
-        $param["limit"] = 20;
+        $param["limit"] = 10;
     }
     if ( isset($_GET["offset"]) ) {
         $param["offset"] = htmlentities($_GET["offset"], ENT_QUOTES, "utf-8");
@@ -77,4 +81,17 @@ function get_limit_and_offset() {
         $param["offset"] = 0;
     }
     return $param;
+}
+
+function paging($limit, $offset, $max) {
+    $max_page = ceil($max / $limit);
+    $paging = "";
+    for ( $i = 0; $i < $max_page; $i++ ) {
+        if ( $i == $offset ) {
+            $paging .= "<span>{$i}</span>";
+        } else {
+            $paging .= "<a href='top.php?offset={$i}'>{$i}</a>";
+        }
+    }
+    return $paging;
 }
