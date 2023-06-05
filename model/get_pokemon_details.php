@@ -1,9 +1,10 @@
 <?php
 
+require_once __DIR__ . "/get_contents.php";
+
 function get_pokemon_details($id) {
     $url = "https://pokeapi.co/api/v2/pokemon/{$id}/";
-    $response = file_get_contents($url);
-    $data = json_decode($response, true);
+    $data = get_contents($url);
 
     $pokemon = [];
     $pokemon["name"] = $data["name"];
