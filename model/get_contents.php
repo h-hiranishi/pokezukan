@@ -1,14 +1,12 @@
 <?php
 
-$cache_path = __DIR__ . "/cache/";
-$cache_limit = 86400;
-
 function get_contents($url) {
-    global $cache_limit;
-    global $cache_path;
-    $file_name = md5($url);
+    $cache_path = __DIR__ . "/cache_contents/";
+    $cache_limit = 86400;
+
+    $file_name = md5($url) . ".json";
     $cache_file_path = $cache_path . $file_name;
-    if ( file_exists($cache_path) && time() < filemtime($cache_file_path) + $cache_limit ) {
+    if ( file_exists($cache_file_path) && time() < filemtime($cache_file_path) + $cache_limit ) {
         $file_handler = fopen($cache_file_path, "r");
         $data = fread($file_handler, filesize($cache_file_path));
         fclose($file_handler);
@@ -16,6 +14,7 @@ function get_contents($url) {
     }
     $response = file_get_contents($url);
     $file_handler = fopen($cache_file_path, "w");
-    fwrite($file_handler, $response);
+    fputs($file_handler, $response);
+    fclose($file_handler);
     return json_decode($response, true);
 }
