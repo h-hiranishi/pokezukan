@@ -16,7 +16,7 @@ function view_main(){
     $tmpl = read_template_file("template.html");
     $cards = view_cards($param["limit"], $param["offset"], $delimiter);
     $tmpl = str_replace("!cards!", $cards, $tmpl);
-    $pages = paging($param["limit"], $param["offset"], $max);
+    $pages = view_paging($param["limit"], $param["offset"], $max);
     $tmpl = str_replace("!paging!", $pages, $tmpl);
     echo $tmpl;
 }
@@ -86,6 +86,17 @@ function get_limit_and_offset() {
     return $param;
 }
 
+function view_paging($limit, $offset, $max) {
+    $tmpl = read_template_file("paging.html");
+    $pages = paging($limit, $offset, $max);
+    $tmpl = str_replace("!paging!", $pages, $tmpl);
+    $tmpl = str_replace("!limit!", $limit, $tmpl);
+    $tmpl = str_replace("!offset_10!", $offset*$limit/10, $tmpl);
+    $tmpl = str_replace("!offset_20!", $offset*$limit/20, $tmpl);
+    $tmpl = str_replace("!offset_50!", $offset*$limit/50, $tmpl);
+    return $tmpl;
+}
+
 function paging($limit, $offset, $max) {
     $max_page = ceil($max / $limit);
     $view_range = define_range($limit, $offset, $max_page);
@@ -97,7 +108,7 @@ function paging($limit, $offset, $max) {
         if ( $i == $offset ) {
             $paging .= "<span>{$i}</span>";
         } else {
-            $paging .= "<a href='top.php?offset={$i}'>{$i}</a>";
+            $paging .= "<a href='?limit={$limit}&offset={$i}'>{$i}</a>";
         }
     }
     if ( $view_range["end"] < $max_page ) {
