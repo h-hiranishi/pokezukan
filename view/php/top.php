@@ -4,24 +4,20 @@ $file_path = __DIR__ . "/../tmpl/";
 $api_path = __DIR__ . "/../../model/";
 require_once "{$api_path}get_pokemon_lists.php";
 
-// limit, offsetはhandlerから受け取るかgetで受け取るか、、、、
-$limit = 20;
-$offset = 0;
 $delimiter = 4;
 
 view_main();
 
 function view_main(){
+    global $delimiter;
+    $param = get_limit_and_offset();
     $tmpl = read_template_file("template.html");
-    $cards = view_cards();
+    $cards = view_cards($param["limit"], $param["offset"], $delimiter);
     $tmpl = str_replace("!cards!", $cards, $tmpl);
     echo $tmpl;
 }
-function view_cards() {
-    global $limit;
-    global $offset;
-    global $delimiter;
 
+function view_cards($limit, $offset, $delimiter) {
     $card_tmpl = read_template_file("card.html");
     $row_tmpl = read_template_file("row_cards.html");
 
@@ -68,3 +64,17 @@ function read_template_file($file_name) {
     return $tmpl;
 }
 
+function get_limit_and_offset() {
+    $param = [];
+    if ( isset($_GET["limit"]) ) {
+        $param["limit"] = $_GET["limit"];
+    } else {
+        $param["limit"] = 50;
+    }
+    if ( isset($_GET["offset"]) ) {
+        $param["offset"] = $_GET["offset"];
+    } else {
+        $param["offset"] = 0;
+    }
+    return $param;
+}
