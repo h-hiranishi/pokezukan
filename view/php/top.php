@@ -84,9 +84,9 @@ function get_limit_and_offset() {
 }
 
 function paging($limit, $offset, $max) {
-    $max_page = ceil($max / $limit);
+    $view_range = define_range($limit, $offset, $max);
     $paging = "";
-    for ( $i = 0; $i < $max_page; $i++ ) {
+    for ( $i = $view_range["start"]; $i < $view_range["end"]; $i++ ) {
         if ( $i == $offset ) {
             $paging .= "<span>{$i}</span>";
         } else {
@@ -94,4 +94,30 @@ function paging($limit, $offset, $max) {
         }
     }
     return $paging;
+}
+
+function define_range($limit, $offset, $max) {
+    $max_page = ceil($max / $limit);
+    $data = [];
+    $data["start"] = 0;
+    $data["end"] = $max_page;
+
+    if ( $max_page < 11 ) {
+        return $data;
+    }
+
+    if ( $offset < 5 ) {
+        $data["end"] = 11;
+        return $data;
+    }
+
+    if ( $offset + 5 < $max_page ) {
+        $data["start"] = $offset - 5;
+        $data["end"] = $data["start"] + 11;
+        return $data;
+    }
+
+    $data["end"] = $max_page;
+    $data["start"] = $data["end"] - 11;
+    return $data;
 }
