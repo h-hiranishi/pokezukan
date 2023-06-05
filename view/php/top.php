@@ -34,7 +34,7 @@ function view_cards() {
     $row_cards = "";
     for ( $i = 0; $i < $len; $i++ ) {
         $row_cards .= make_card($pokemon_lists[$i], $card_tmpl);
-        if ( ( $i != 0 && $i % $delimiter === 0 ) || $i + 1 == $len ) {
+        if ( ($i+1) % $delimiter === 0 || $i + 1 == $len ) {
             $cards .= str_replace("!row_cards!", $row_cards, $row_tmpl);
             $row_cards = "";
         }
