@@ -5,7 +5,7 @@ $api_path = __DIR__ . "/../../model/";
 require_once "{$api_path}get_pokemon_lists.php";
 
 $delimiter = 4;
-$max = 1000;
+$max = 1010;
 
 view_main();
 
@@ -92,8 +92,16 @@ function view_paging($limit, $offset, $max) {
     $tmpl = str_replace("!paging!", $pages, $tmpl);
     $tmpl = str_replace("!limit!", $limit, $tmpl);
     $tmpl = str_replace("!offset_10!", $offset*$limit/10, $tmpl);
-    $tmpl = str_replace("!offset_20!", $offset*$limit/20, $tmpl);
-    $tmpl = str_replace("!offset_50!", $offset*$limit/50, $tmpl);
+    if ( $max < ($offset+1) * ($limit + 1) - 1 ) {
+        $tmpl = str_replace("!offset_20!", ceil($max / 20) - 1, $tmpl);
+    } else {
+        $tmpl = str_replace("!offset_20!", $offset*$limit/20, $tmpl);
+    }
+    if ( $max < ($offset+1) * ($limit + 1) - 1 ) {
+        $tmpl = str_replace("!offset_50!", ceil($max / 50) - 1, $tmpl);
+    } else {
+        $tmpl = str_replace("!offset_50!", $offset*$limit/50, $tmpl);
+    }
     return $tmpl;
 }
 
@@ -101,8 +109,12 @@ function paging($limit, $offset, $max) {
     $max_page = ceil($max / $limit);
     $view_range = define_range($limit, $offset, $max_page);
     $paging = "";
-    if ( 0 < $view_range["start"] ) {
-        $paging = "<span>...</span>";
+    if ( 1 < $view_range["start"] ) {
+        $paging = "<a href='?limit={$limit}&offset=0'>0</a>";
+        $paging .= "<span>...</span>";
+    }
+    if ( 1 == $view_range["start"] ) {
+        $paging = "<a href='?limit={$limit}&offset=0'>0</a>";
     }
     for ( $i = $view_range["start"]; $i < $view_range["end"]; $i++ ) {
         if ( $i == $offset ) {
@@ -111,8 +123,13 @@ function paging($limit, $offset, $max) {
             $paging .= "<a href='?limit={$limit}&offset={$i}'>{$i}</a>";
         }
     }
-    if ( $view_range["end"] < $max_page ) {
+    $max_display_page = $max_page-1;
+    if ( $view_range["end"] < $max_display_page ) {
         $paging .= "<span>...</span>";
+        $paging .= "<a href='?limit={$limit}&offset={$max_display_page}'>{$max_display_page}</a>";
+    }
+    if ( $max_display_page - 1 == $view_range["end"] ) {
+        $paging .= "<a href='?limit={$limit}&offset={$max_display_page}'>{$max_display_page}</a>";
     }
     return $paging;
 }
