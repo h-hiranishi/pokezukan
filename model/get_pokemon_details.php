@@ -10,9 +10,11 @@ function get_pokemon_details($id) {
     $data_sp = get_contents($url_sp);
 
     $pokemon = [];
+    $pokemon["id"] = $data["id"];
     $pokemon["name"] = $data_sp["names"][0]["name"];
     $pokemon["flavor_text"] = get_jp_flavor($data_sp["flavor_text_entries"]);
     $pokemon["img_name"] = get_img($data["sprites"]["front_default"]);
+    $pokemon["pokemon_color"] = $data_sp["color"]["name"];
     $pokemon["height"] = $data["height"];
     $pokemon["weight"] = $data["weight"];
     $pokemon["types"] = get_types($data["types"]);
