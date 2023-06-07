@@ -1,5 +1,5 @@
 <div class="col">
-    <div class="card" style="width: 18rem;">
+    <div class="card border-5 border-secondary mb-3" style="width: 18rem;">
         <div class="card-body" style="background-color: !pokemon_color!;">
             <div class="d-flex justify-content-between">
                     <div class="p-2">
@@ -12,19 +12,19 @@
             <div style="background-color: white;">
                 <img src="!img_url!" alt="!name!" class="card-img-top">
             </div>
-            <p class="card-text">
-                高さ: !height!
-                <br>
-                重さ: !weight!
-                <br>
-                <!-- 現状簡易な表示 -->
-                タイプ: !types!
-                <br>
-                !flavor_text!
-                <br>
-            </p>
-            <!-- 遷移先のURLは要変更 -->
-            <!-- <a href="#" class="btn btn-primary">詳細</a> -->
+            <div class="card-text">
+                <p style="text-align: right">
+                    <!-- 現状簡易な表示 -->
+                    タイプ: !types!
+                </p>
+                    <small>
+                        !flavor_text!
+                    </small>
+                <p style="text-align: right;">
+                    !height! m | 
+                    !weight! kg
+                </p>
+            </div>
         </div>
     </div>
 </div>
