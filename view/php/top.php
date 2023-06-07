@@ -49,13 +49,14 @@ function make_card($pokemon, $card_tmpl) {
         if ( $key == "types" ) {
             $types = "";
             foreach ( $val as $type ) {
-                $types .= "<div>$type</div>";
+                $types .= "<span>$type</span>";
             }
             $card_tmpl = str_replace("!types!", $types, $card_tmpl);
             continue;
         }
         if ( $key == "img_name" ) {
-            $card_tmpl = str_replace("!img_url!", "/php/teck_base_camp/lp/pokezukan/model/cache_img/{$val}", $card_tmpl);
+            // $card_tmpl = str_replace("!img_url!", "/php/teck_base_camp/lp/pokezukan/model/cache_img/{$val}", $card_tmpl);
+            $card_tmpl = str_replace("!img_url!", "../../model/cache_img/{$val}", $card_tmpl);
         }
         $card_tmpl = str_replace("!{$key}!", $val, $card_tmpl);
     }

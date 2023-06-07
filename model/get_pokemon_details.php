@@ -15,8 +15,8 @@ function get_pokemon_details($id) {
     $pokemon["flavor_text"] = get_jp_flavor($data_sp["flavor_text_entries"]);
     $pokemon["img_name"] = get_img($data["sprites"]["front_default"]);
     $pokemon["pokemon_color"] = $data_sp["color"]["name"];
-    $pokemon["height"] = $data["height"];
-    $pokemon["weight"] = $data["weight"];
+    $pokemon["height"] = $data["height"] * 0.1;
+    $pokemon["weight"] = $data["weight"] * 0.1;
     $pokemon["types"] = get_types($data["types"]);
 
     return $pokemon;
@@ -29,6 +29,7 @@ function get_jp_flavor($flavor_array) {
             return $flavor_object["flavor_text"];
         }
     }
+    return "データがありません.....🙇🙇‍♂️🙇‍♀️";
 }
 
 
