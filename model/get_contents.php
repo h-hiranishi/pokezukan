@@ -2,7 +2,7 @@
 
 function get_contents($url) {
     $cache_path = __DIR__ . "/cache_contents/";
-    $cache_limit = 86400;
+    $cache_limit = 864000;
 
     $file_name = md5($url) . ".json";
     $cache_file_path = $cache_path . $file_name;
