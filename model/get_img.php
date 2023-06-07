@@ -1,7 +1,7 @@
 <?php
 
 function get_img($url) {
-    $cache_limit = 86400;
+    $cache_limit = 864000;
     $cache_path = __DIR__ . "/cache_img/";
 
     $file_name = md5($url) . ".png";
